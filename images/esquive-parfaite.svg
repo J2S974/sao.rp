@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+<defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#7f92ad"/><stop offset=".6" stop-color="#cdd8e6"/><stop offset="1" stop-color="#98a8bd"/>
+  </linearGradient>
+  <filter id="blur"><feGaussianBlur stdDeviation="3"/></filter>
+  <g id="fig" fill="none" stroke="#121a28" stroke-linecap="round">
+    <circle cx="0" cy="-96" r="15" fill="#121a28" stroke="none"/>
+    <path d="M-14,-80 L14,-80 L11,-36 L-11,-36 Z" fill="#121a28" stroke="none"/>
+    <path d="M-14,-80 q-30,-6 -44,6 q20,2 36,12 z" fill="#121a28" stroke="none"/>
+    <line x1="-6" y1="-36" x2="-26" y2="2" stroke-width="12"/>
+    <line x1="7" y1="-36" x2="28" y2="-6" stroke-width="12"/>
+    <line x1="-12" y1="-70" x2="-34" y2="-46" stroke-width="9"/>
+    <line x1="12" y1="-70" x2="38" y2="-60" stroke-width="9"/>
+  </g>
+</defs>
+<style>
+  .main{animation:dodge 2.6s cubic-bezier(.2,.9,.25,1) infinite}
+  .g1{animation:dodge 2.6s cubic-bezier(.2,.9,.25,1) .07s infinite}
+  .g2{animation:dodge 2.6s cubic-bezier(.2,.9,.25,1) .14s infinite}
+  .g3{animation:dodge 2.6s cubic-bezier(.2,.9,.25,1) .21s infinite}
+  .slash{stroke-dasharray:760;stroke-dashoffset:760;animation:slash 2.6s ease-out infinite}
+  .lines{animation:lines 2.6s ease-out infinite}
+  .ring{transform-origin:430px 300px;animation:ring 2.6s ease-out infinite}
+  @keyframes dodge{0%,16%{transform:translateX(0)}30%,100%{transform:translateX(-170px)}}
+  @keyframes slash{0%,10%{stroke-dashoffset:760;opacity:0}14%{opacity:1}26%{stroke-dashoffset:0;opacity:1}42%{opacity:0;stroke-dashoffset:0}100%{opacity:0;stroke-dashoffset:0}}
+  @keyframes lines{0%,14%{opacity:0}24%{opacity:.8}50%,100%{opacity:0}}
+  @keyframes ring{0%,22%{transform:scale(.2);opacity:0}28%{opacity:.9}60%,100%{transform:scale(2.4);opacity:0}}
+</style>
+<rect width="640" height="360" fill="url(#sky)"/>
+<rect y="300" width="640" height="60" fill="#5d6c82"/>
+<line x1="0" y1="300" x2="640" y2="300" stroke="#e6edf6" stroke-opacity=".6" stroke-width="2"/>
+<g class="lines" stroke="#ffffff" stroke-width="2" stroke-linecap="round">
+  <line x1="60" y1="120" x2="260" y2="120"/><line x1="20" y1="170" x2="300" y2="170"/>
+  <line x1="90" y1="220" x2="280" y2="220"/><line x1="40" y1="260" x2="240" y2="260"/>
+  <line x1="400" y1="90" x2="600" y2="90"/><line x1="440" y1="140" x2="620" y2="140"/>
+</g>
+<ellipse class="ring" cx="430" cy="300" rx="60" ry="10" fill="none" stroke="#ffffff" stroke-width="3"/>
+<g transform="translate(430 300)">
+  <g class="g3" opacity=".16" filter="url(#blur)"><use href="#fig"/></g>
+  <g class="g2" opacity=".26" filter="url(#blur)"><use href="#fig"/></g>
+  <g class="g1" opacity=".4"><use href="#fig"/></g>
+  <g class="main"><use href="#fig"/></g>
+</g>
+<path class="slash" d="M 600 20 Q 440 110 300 330" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round" opacity="0"/>
+<path class="slash" d="M 600 20 Q 440 110 300 330" fill="none" stroke="#bfe3ff" stroke-width="22" stroke-linecap="round" stroke-opacity=".35" filter="url(#blur)"/>
+</svg>

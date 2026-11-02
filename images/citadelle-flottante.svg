@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200">
+  <title>Citadelle flottante encadrée d'anneaux dorés</title>
+  <desc>Illustration vectorielle en calques d'une tour flottante au-dessus des nuages, entourée d'anneaux dorés.</desc>
+  <style>
+    /* nuages : dérive lente aller-retour autour de leur position d'origine */
+    .cl-l{animation:driftL 40s ease-in-out infinite}
+    .cl-r{animation:driftR 40s ease-in-out infinite}
+    @keyframes driftL{0%,100%{transform:translate(0,0)}30%{transform:translate(24px,-3px)}70%{transform:translate(-46px,3px)}}
+    @keyframes driftR{0%,100%{transform:translate(0,0)}30%{transform:translate(-24px,-3px)}70%{transform:translate(46px,3px)}}
+    /* tour : léger mouvement flottant */
+    .float{animation:float 7s ease-in-out infinite}
+    .float-sm{animation:floatSm 9s ease-in-out infinite}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+    @keyframes floatSm{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+    /* anneaux dorés : rotation continue, sens opposés */
+    .ring-cw{transform-origin:450px 480px;animation:spin 70s linear infinite}
+    .ring-ccw{transform-origin:450px 480px;animation:spin 48s linear infinite reverse}
+    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+  </style>
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1">
+      <stop offset="0" stop-color="#55a9e8"/><stop offset="1" stop-color="#c5e8f7"/>
+    </linearGradient>
+    <linearGradient id="gold" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#ffe58a"/><stop offset=".48" stop-color="#d99a24"/><stop offset="1" stop-color="#fff0a6"/>
+    </linearGradient>
+    <linearGradient id="tower" x2="1" y2=".2">
+      <stop offset="0" stop-color="#263847"/><stop offset=".5" stop-color="#68747b"/><stop offset="1" stop-color="#303d48"/>
+    </linearGradient>
+    <linearGradient id="rock" x2="1" y2="1">
+      <stop offset="0" stop-color="#263b4b"/><stop offset="1" stop-color="#101f2c"/>
+    </linearGradient>
+  </defs>
+
+  <!-- BACKGROUND -->
+  <g id="background">
+    <rect width="900" height="1200" fill="url(#sky)"/>
+    <path d="M0 730 Q120 650 250 730 T500 720 T900 700 V1200 H0Z" fill="#9bc5d7" opacity=".55"/>
+    <path d="M0 870 Q130 790 270 865 T560 850 T900 835 V1200 H0Z" fill="#7899a8" opacity=".35"/>
+    <g fill="#fff" opacity=".95">
+      <path class="cl-l" style="animation-duration:34s" d="M-40 530 Q20 465 90 515 Q130 440 205 500 Q270 455 315 535 Q375 555 360 620 H-40Z"/>
+      <path class="cl-r" style="animation-duration:41s" d="M540 540 Q590 475 660 520 Q710 450 775 515 Q850 470 930 540 V660 H540Z"/>
+      <path class="cl-l" style="animation-duration:37s" d="M-30 800 Q35 735 105 785 Q160 715 225 785 Q285 745 340 810 H-30Z"/>
+      <path class="cl-r" style="animation-duration:45s" d="M610 790 Q680 720 740 780 Q810 710 870 775 Q925 755 950 810 V900 H610Z"/>
+      <path class="cl-l" style="animation-duration:31s" d="M-30 1030 Q50 950 120 1015 Q190 940 260 1015 Q330 980 390 1050 H-30Z"/>
+      <path class="cl-r" style="animation-duration:43s" d="M550 1040 Q620 955 690 1015 Q760 940 825 1015 Q885 980 940 1040 V1150 H550Z"/>
+    </g>
+    <g id="distant-land" fill="#587c78" opacity=".9">
+      <path d="M0 910 L100 850 190 900 280 830 370 890 470 825 560 900 660 835 760 890 900 820 V1200 H0Z"/>
+      <path d="M0 1050 L130 960 240 1030 370 940 500 1025 620 945 750 1030 900 950 V1200 H0Z" fill="#426b69"/>
+    </g>
+    <g id="rivers" fill="none" stroke="#78d4ed" stroke-width="9" opacity=".9">
+      <path d="M80 1200 Q140 1110 115 1060 T185 970 T210 900"/>
+      <path d="M430 1200 Q390 1110 460 1060 T500 990 T570 940"/>
+      <path d="M690 1200 Q650 1120 700 1070 T740 1010"/>
+    </g>
+  </g>
+
+  <!-- DISTANT FLOATING STRUCTURES -->
+  <g id="distant-islands" class="float-sm" fill="#7d9993" stroke="#526e72" stroke-width="5">
+    <path d="M720 315 L770 290 820 315 785 340 750 335Z"/>
+    <path d="M755 335 L770 360 790 337" fill="#536c70"/>
+    <path d="M815 480 L850 460 885 480 858 500 830 498Z"/>
+    <path d="M840 498 L850 520 866 499" fill="#536c70"/>
+  </g>
+
+  <!-- CLOUD LAYER -->
+  <g id="clouds" fill="#f7fcff" stroke="#d7edf6" stroke-width="5">
+    <path class="cl-l" style="animation-duration:36s" d="M-30 650 Q10 590 65 625 Q95 560 155 615 Q220 590 250 650 Q300 670 280 715 H-30Z"/>
+    <path class="cl-r" style="animation-duration:42s" d="M610 655 Q650 590 705 630 Q750 565 815 620 Q875 600 930 665 V730 H610Z"/>
+    <path class="cl-l" style="animation-duration:47s" d="M-30 900 Q20 835 85 875 Q145 810 205 870 Q260 840 310 910 H-30Z"/>
+    <path class="cl-r" style="animation-duration:39s" d="M590 895 Q650 820 710 870 Q775 800 840 865 Q900 845 940 900 V970 H590Z"/>
+  </g>
+
+  <!-- CENTRAL FLOATING TOWER -->
+  <g id="floating-tower" class="float">
+    <!-- upper spire -->
+    <path d="M425 115 L450 45 470 115 465 170 430 170Z" fill="#64747c" stroke="#263845" stroke-width="5"/>
+    <path d="M450 45 L450 12" stroke="#b7c4c9" stroke-width="5"/>
+    <path d="M435 105 L465 105" stroke="#aab8be" stroke-width="5"/>
+    <!-- stepped conical tower -->
+    <path d="M390 170 L510 170 535 225 365 225Z" fill="url(#tower)" stroke="#263845" stroke-width="6"/>
+    <path d="M365 225 L535 225 560 285 340 285Z" fill="url(#tower)" stroke="#263845" stroke-width="6"/>
+    <path d="M340 285 L560 285 585 355 315 355Z" fill="url(#tower)" stroke="#263845" stroke-width="6"/>
+    <path d="M315 355 L585 355 615 430 285 430Z" fill="url(#tower)" stroke="#263845" stroke-width="6"/>
+    <path d="M285 430 L615 430 645 505 255 505Z" fill="url(#tower)" stroke="#263845" stroke-width="6"/>
+    <path d="M255 505 L645 505 680 575 220 575Z" fill="url(#tower)" stroke="#263845" stroke-width="6"/>
+    <path d="M220 575 L680 575 715 635 185 635Z" fill="url(#tower)" stroke="#263845" stroke-width="6"/>
+    <g fill="none" stroke="#aeb9bc" stroke-width="5" opacity=".75">
+      <path d="M375 205 H525 M350 265 H550 M325 335 H575 M295 405 H605 M265 480 H635 M230 550 H670 M195 615 H705"/>
+    </g>
+    <!-- broad platform and bridges -->
+    <path d="M90 650 L810 650 755 675 145 675Z" fill="#566b75" stroke="#263845" stroke-width="7"/>
+    <path d="M185 635 L715 635 760 665 140 665Z" fill="#77868a" stroke="#263845" stroke-width="6"/>
+    <g stroke="#273b48" stroke-width="7" fill="#829399">
+      <path d="M140 650 V570 L155 650Z"/><path d="M205 650 V560 L220 650Z"/>
+      <path d="M695 650 V560 L710 650Z"/><path d="M760 650 V570 L775 650Z"/>
+      <path d="M455 650 V545 L470 650Z"/>
+    </g>
+    <!-- underside -->
+    <path d="M185 665 L715 665 680 755 625 830 575 900 520 955 450 985 380 955 325 900 275 830 220 755Z"
+          fill="url(#rock)" stroke="#1c303d" stroke-width="8"/>
+    <g fill="none" stroke="#819098" stroke-width="6" opacity=".55">
+      <path d="M245 720 L320 785 350 870 M655 720 L580 785 550 870"/>
+      <path d="M320 810 L390 865 410 940 M580 810 L510 865 490 940"/>
+      <path d="M390 720 L450 790 510 720"/>
+    </g>
+    <g fill="#203542">
+      <path d="M300 835 L335 930 350 845Z"/><path d="M600 835 L565 930 550 845Z"/>
+      <path d="M420 900 L450 1010 480 900Z"/>
+    </g>
+  </g>
+
+  <!-- GOLDEN RINGS : chaque anneau a son propre groupe pour tourner -->
+  <g id="golden-rings" fill="none" stroke="url(#gold)" stroke-width="24">
+    <g class="ring-cw">
+      <ellipse cx="450" cy="480" rx="410" ry="430" transform="rotate(-13 450 480)"/>
+      <g stroke="#ffe8a0" stroke-width="6">
+        <path d="M96 185 l-18 12 M205 74 l-10 18 M650 70 l8 18 M795 190 l18 10"/>
+        <path d="M80 745 l-15 10 M250 875 l-8 18 M650 875 l8 18 M820 740 l15 10"/>
+      </g>
+      <g fill="#6c5528" stroke="#ffdf7a" stroke-width="4">
+        <circle cx="92" cy="190" r="7"/><circle cx="205" cy="75" r="7"/>
+        <circle cx="650" cy="70" r="7"/><circle cx="795" cy="190" r="7"/>
+        <circle cx="80" cy="745" r="7"/><circle cx="250" cy="875" r="7"/>
+        <circle cx="650" cy="875" r="7"/><circle cx="820" cy="740" r="7"/>
+      </g>
+    </g>
+    <g class="ring-ccw">
+      <ellipse cx="450" cy="480" rx="365" ry="390" transform="rotate(13 450 480)" stroke-width="10" opacity=".9"/>
+    </g>
+  </g>
+</svg>
