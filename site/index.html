@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aincrad – Le savoir de Gray</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#ffb347;
+  --accent2:#7fdcff;
+  --ink:#e9f1ff;
+  --muted:#9fb0d0;
+  --panel:rgba(12,18,42,.72);
+  --line:rgba(255,255,255,.16);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:#070b1e;color:var(--ink);
+  font-family:'Rajdhani',system-ui,sans-serif;font-size:18px;line-height:1.55;
+  overflow:hidden;
+}
+h1,h2,h3,.orb{font-family:'Orbitron','Rajdhani',sans-serif;letter-spacing:.06em}
+/* ---------- FOND : CITADELLE FLOTTANTE (SVG animé) ---------- */
+#bg{position:fixed;inset:0;z-index:0;overflow:hidden;
+  background:linear-gradient(to bottom,#55a9e8 0%,#96cdf1 58%,#8fbac9 62%,#6f9a9c 72%,#587c78 80%,#426b69 100%)}
+#bg img{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  height:min(100vh,133.34vw);height:min(100dvh,133.34vw);width:auto;aspect-ratio:3/4;display:block;
+  user-select:none;-webkit-user-drag:none;pointer-events:none;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 12%,#000 88%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 96%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to right,transparent,#000 12%,#000 88%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 96%,transparent);
+  mask-composite:intersect}
+#bg img.bg-large{display:none}
+@media (min-aspect-ratio:4/3){
+  #bg img.bg-portrait{display:none}
+  #bg img.bg-large{display:block;height:100vh;height:100dvh;width:auto;aspect-ratio:2300/1200;-webkit-mask-image:none;mask-image:none}
+}
+@media (min-aspect-ratio:23/12){
+  #bg img.bg-large{width:100vw;height:100vh;height:100dvh;aspect-ratio:auto;object-fit:cover;object-position:50% 0}
+}
+#bgshade{position:fixed;inset:0;z-index:1;pointer-events:none;background:rgba(6,12,34,0);transition:background 1.4s ease}
+body.in-app #bgshade{background:rgba(6,12,34,.66)}
+
+/* ---------- INTRO ---------- */
+#intro{
+  position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-start;padding-top:9vh;text-align:center;
+  transition:opacity .9s ease;
+}
+#intro.hide{opacity:0;pointer-events:none}
+.logo-sub{font-family:'Orbitron';font-size:clamp(11px,2vw,16px);letter-spacing:.55em;color:#fff;text-shadow:0 2px 10px rgba(0,30,90,.95),0 0 3px rgba(0,30,90,.8)}
+.logo-main{
+  font-family:'Orbitron';font-weight:900;font-size:clamp(30px,7vw,78px);line-height:1.05;margin-top:.25em;
+  background:linear-gradient(180deg,#fff 20%,#bfe6ff 60%,#6bb8ff);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 3px 12px rgba(0,25,80,.9)) drop-shadow(0 0 2px rgba(0,25,80,.8));
+}
+.logo-main small{display:block;font-size:.34em;letter-spacing:.5em;color:var(--accent);-webkit-text-fill-color:var(--accent);margin-top:.5em;font-weight:700}
+#start{
+  position:absolute;bottom:7vh;left:50%;transform:translateX(-50%);
+  font-family:'Orbitron';font-weight:700;font-size:clamp(16px,2.6vw,24px);letter-spacing:.35em;
+  color:#fff;background:linear-gradient(180deg,rgba(255,170,60,.62),rgba(214,96,18,.55));
+  border:2px solid var(--accent);padding:.9em 2.4em;cursor:pointer;
+  clip-path:polygon(18px 0,100% 0,calc(100% - 18px) 100%,0 100%);
+  text-shadow:0 2px 8px rgba(70,25,0,.9);
+  box-shadow:0 0 30px rgba(255,179,71,.5);
+  animation:pulse 2.2s ease-in-out infinite;transition:transform .2s;
+}
+#start:hover{transform:translateX(-50%) scale(1.07)}
+@keyframes pulse{0%,100%{filter:drop-shadow(0 0 6px rgba(255,179,71,.6))}50%{filter:drop-shadow(0 0 22px rgba(255,179,71,1))}}
+.hint{position:absolute;bottom:2.2vh;left:0;right:0;font-size:14px;letter-spacing:.3em;color:#fff;text-shadow:0 1px 6px rgba(0,30,90,.9);text-transform:uppercase}
+
+#flash{position:fixed;inset:0;z-index:20;pointer-events:none;opacity:0;background:#fff;display:flex;align-items:center;justify-content:center}
+#flash span{font-family:'Orbitron';font-weight:900;font-size:clamp(28px,8vw,90px);letter-spacing:.2em;color:#0a1030;opacity:0}
+#flash.go{animation:flash 1.7s ease forwards}
+#flash.go span{animation:ls 1.7s ease forwards}
+@keyframes flash{0%{opacity:0;background:#fff}18%{opacity:1;background:#fff}55%{opacity:1;background:#cfeaff}100%{opacity:0}}
+@keyframes ls{0%{opacity:0;transform:scale(.7)}25%{opacity:1;transform:scale(1)}60%{opacity:1;transform:scale(1.08)}100%{opacity:0;transform:scale(1.4)}}
+
+/* ---------- APP ---------- */
+#app{position:fixed;inset:0;z-index:5;display:none;opacity:0;transition:opacity 1s ease}
+#app.show{display:flex;flex-direction:column}
+#app.visible{opacity:1}
+header{
+  display:flex;align-items:center;gap:16px;padding:12px 22px;
+  background:linear-gradient(180deg,rgba(6,10,30,.88),rgba(6,10,30,.55));
+  border-bottom:1px solid var(--line);backdrop-filter:blur(8px);
+}
+header .brand{font-family:'Orbitron';font-weight:700;letter-spacing:.14em;font-size:15px;color:#fff}
+header .brand b{color:var(--accent)}
+header .sp{flex:1}
+header .who{font-size:14px;color:var(--muted);letter-spacing:.08em}
+#burger{display:none;background:none;border:1px solid var(--line);color:#fff;width:42px;height:42px;border-radius:8px;font-size:20px;cursor:pointer}
+.shell{flex:1;display:flex;min-height:0}
+nav{
+  width:290px;flex-shrink:0;overflow-y:auto;padding:20px 14px 40px;
+  background:linear-gradient(90deg,rgba(6,10,30,.82),rgba(6,10,30,.55));
+  border-right:1px solid var(--line);backdrop-filter:blur(8px);
+}
+nav a,nav summary{
+  display:block;padding:11px 14px;margin:4px 0;border-radius:10px;cursor:pointer;
+  color:var(--ink);text-decoration:none;font-weight:600;letter-spacing:.04em;
+  border:1px solid transparent;transition:.2s;list-style:none;
+}
+nav summary::-webkit-details-marker{display:none}
+nav summary{font-family:'Orbitron';font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);display:flex;justify-content:space-between}
+nav summary::after{content:'＋';color:var(--accent)}
+nav details[open] summary::after{content:'－'}
+nav a:hover,nav summary:hover{background:rgba(255,255,255,.07);border-color:var(--line)}
+nav details a{margin-left:12px;font-size:17px;color:#dbe6ff}
+nav a.active{
+  background:linear-gradient(90deg,rgba(255,179,71,.28),rgba(255,179,71,.06));
+  border-color:var(--accent);box-shadow:0 0 16px rgba(255,179,71,.25);color:#fff
+}
+main{flex:1;overflow-y:auto;padding:34px clamp(16px,4vw,56px) 70px}
+.page{max-width:920px;margin:0 auto;animation:in .5s ease}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.page h1{font-size:clamp(24px,4vw,38px);color:#fff;margin-bottom:.3em;text-shadow:0 0 18px rgba(127,220,255,.4)}
+.page h1::after{content:'';display:block;height:3px;width:120px;margin-top:10px;background:linear-gradient(90deg,var(--accent),transparent)}
+.crumb{font-size:13px;letter-spacing:.25em;color:var(--accent2);text-transform:uppercase;margin-bottom:6px;font-family:'Orbitron'}
+.card{
+  background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px 26px;margin:20px 0;
+  backdrop-filter:blur(10px);box-shadow:0 10px 40px rgba(0,0,0,.35)
+}
+.card h2{font-size:18px;color:var(--accent);margin-bottom:.5em}
+
+.lvl{width:100%;border-collapse:collapse;margin-top:10px}
+.lvl td{padding:8px 12px;border-bottom:1px solid rgba(127,220,255,.14)}
+.lvl td:first-child{width:90px;color:var(--accent);font-weight:700;white-space:nowrap}
+.lvl tr:last-child td{border-bottom:0}
+.lvl tr.maybe td{opacity:.75;font-style:italic}
+/* accueil */
+.hero{display:grid;grid-template-columns:minmax(220px,320px) 1fr;gap:28px;align-items:center}
+.portrait{
+  position:relative;aspect-ratio:1/1;border-radius:18px;overflow:hidden;border:2px solid var(--accent2);
+  box-shadow:0 0 30px rgba(127,220,255,.45);background:#0b1230
+}
+.portrait img{width:100%;height:100%;object-fit:cover;display:block}
+.portrait .ph{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:16px;color:var(--muted);font-size:15px}
+.hello{font-size:21px}
+.hello strong{color:var(--accent)}
+.tag{display:inline-block;font-family:'Orbitron';font-size:12px;letter-spacing:.14em;padding:5px 12px;margin:10px 8px 0 0;border:1px solid var(--accent);color:var(--accent);border-radius:99px}
+.tag.b{border-color:var(--accent2);color:var(--accent2)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:10px}
+.tile{
+  display:block;padding:18px;border-radius:14px;text-decoration:none;color:var(--ink);
+  background:rgba(255,255,255,.05);border:1px solid var(--line);transition:.25s
+}
+.tile:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 8px 28px rgba(255,179,71,.25)}
+.tile b{font-family:'Orbitron';font-size:14px;letter-spacing:.1em;color:var(--accent2);display:block;margin-bottom:4px}
+.tile span{font-size:15px;color:var(--muted)}
+.new{display:inline-block;background:var(--accent);color:#1a1000;font-family:'Orbitron';font-size:10px;padding:2px 8px;border-radius:6px;margin-left:8px;vertical-align:middle;letter-spacing:.1em}
+
+/* voyages */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.stat{text-align:center;padding:22px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.05)}
+.stat .n{font-family:'Orbitron';font-weight:900;font-size:44px;color:var(--accent);text-shadow:0 0 20px rgba(255,179,71,.5)}
+.stat .l{font-size:15px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.note{border-left:4px solid var(--accent2);padding:12px 16px;background:rgba(127,220,255,.08);border-radius:0 10px 10px 0;margin-top:16px}
+.zone{margin:16px 0}
+.zone .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.zone .nm{font-family:'Orbitron';font-size:17px;color:#fff}
+.zone .lv{font-family:'Orbitron';font-size:13px;color:var(--accent);letter-spacing:.1em}
+.bar{position:relative;height:12px;margin-top:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.bar i{position:absolute;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,var(--accent2),var(--accent));box-shadow:0 0 12px rgba(127,220,255,.6)}
+.scale{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px;letter-spacing:.1em}
+.price{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--line);box-shadow:0 0 30px rgba(255,80,60,.2)}
+.cap{margin-top:10px;font-size:14px;color:var(--muted);text-align:center;letter-spacing:.08em}
+.legend{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:16px}
+.legend span{display:inline-flex;align-items:center;gap:9px;font-size:16px;letter-spacing:.04em}
+.legend i{width:20px;height:20px;border-radius:4px;border:1px solid rgba(255,255,255,.55);display:inline-block}
+.map{display:block;width:100%;max-width:720px;height:auto;margin:0 auto;border-radius:12px;border:1px solid var(--line);image-rendering:pixelated;background:#222}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.gallery figure{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,.04);transition:.25s}
+.gallery figure:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 8px 28px rgba(255,179,71,.25)}
+.gallery img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.gallery figcaption{padding:10px 14px;font-family:'Orbitron';font-size:13px;letter-spacing:.08em;color:var(--accent2)}
+.wikitext{font-size:19px}
+.wikitext p{margin:0 0 14px}
+.wikitext h3{font-size:16px;color:var(--accent);margin:20px 0 8px}
+.wikitext ul{margin:0 0 14px 22px}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
+.mcard{display:flex;flex-direction:column;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,.04);transition:.25s}
+.mcard:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 8px 28px rgba(255,179,71,.25)}
+.mcard.boss{border-color:#ff5a4f;box-shadow:0 0 24px rgba(255,80,60,.35)}
+.mcard img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.mbody{padding:14px 16px 18px}
+.mname{font-family:'Orbitron';font-size:16px;color:#fff;letter-spacing:.05em}
+.hp,.bosstag{display:inline-block;margin:10px 8px 0 0;font-family:'Orbitron';font-size:12px;letter-spacing:.1em;padding:4px 11px;border-radius:99px}
+.hp{border:1px solid #ff7b7b;color:#ffa8a8}
+.bosstag{background:#ff4a3f;color:#fff;border:1px solid #ff4a3f}
+.mdesc{margin-top:10px;font-size:17px;color:#dbe6ff;line-height:1.45}
+.mdesc b{color:var(--accent2)}
+.extra{display:grid;grid-template-columns:minmax(220px,320px) 1fr;gap:22px;align-items:center}
+.extra.solo{grid-template-columns:1fr}
+.extra img{display:block;width:100%;border-radius:12px;border:1px solid var(--line)}
+@media(max-width:860px){.extra{grid-template-columns:1fr}}
+.cskill{margin-top:12px;padding:10px 12px;border-left:3px solid var(--accent);background:rgba(255,179,71,.08);border-radius:0 10px 10px 0;font-size:16px;line-height:1.45}
+.cskill small{display:block;font-family:'Orbitron';font-size:11px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin-bottom:3px}
+.cskill b{color:#fff}
+.mcard.secret{border-color:#b27bff;box-shadow:0 0 24px rgba(178,123,255,.3)}
+.mcard img.top{object-position:center 28%}
+.noimg{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;color:var(--muted);font-size:15px;background:linear-gradient(135deg,rgba(127,220,255,.08),rgba(255,179,71,.08))}
+.soon{text-align:center;padding:46px 20px}
+.soon .orb{font-size:46px;color:var(--accent);margin-bottom:8px}
+footer{margin-top:40px;text-align:center;font-size:14px;color:var(--muted);letter-spacing:.1em}
+
+@media(max-width:860px){
+  #burger{display:block}
+  nav{position:absolute;top:66px;bottom:0;left:0;z-index:30;transform:translateX(-102%);transition:transform .3s;background:rgba(6,10,30,.96)}
+  nav.open{transform:none}
+  .hero{grid-template-columns:1fr}
+  .portrait{max-width:300px;margin:0 auto}
+  header .who{display:none}
+  .stats{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="bg" aria-hidden="true"><img class="bg-portrait" src="images/citadelle.svg" alt="" draggable="false"><img class="bg-large" src="images/citadelle-large.svg" alt="" draggable="false"></div>
+<div id="bgshade"></div>
+
+<!-- ======== INTRO ======== -->
+<section id="intro">
+  <div class="logo-sub">LE SAVOIR DE GRAY</div>
+  <h1 class="logo-main">SWORD ART ONLINE<small>AINCRAD · RP WIKI</small></h1>
+  <button id="start" type="button">LINK START</button>
+  <div class="hint">Cliquez pour vous connecter</div>
+</section>
+<div id="flash"><span>LINK START !</span></div>
+
+<!-- ======== SITE ======== -->
+<div id="app">
+  <header>
+    <button id="burger" aria-label="Menu">☰</button>
+    <div class="brand">AINCRAD <b>//</b> WIKI RP</div>
+    <div class="sp"></div>
+  </header>
+  <div class="shell">
+    <nav id="menu"></nav>
+    <main id="content"></main>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   2) LINK START
+   ========================================================= */
+document.getElementById('start').addEventListener('click', () => {
+  const flash = document.getElementById('flash'), intro = document.getElementById('intro'), app = document.getElementById('app');
+  flash.classList.add('go');
+  setTimeout(() => {
+    intro.classList.add('hide');
+    document.body.classList.add('in-app');
+    app.classList.add('show');
+    requestAnimationFrame(() => app.classList.add('visible'));
+    route();
+  }, 650);
+  setTimeout(() => { intro.style.display = 'none'; flash.classList.remove('go'); }, 1800);
+});
+
+/* =========================================================
+   3) MENU & PAGES  (ajoute tes pages dans PAGES au fur et à mesure)
+   ========================================================= */
+const MENU = [
+  {id: 'accueil', label: 'Accueil'},
+  {id: 'conseils', label: 'Conseils'},
+  {group: 'La Forge', items: [
+    {id: 'un-forgeron-a-suivre', label: 'Une forgeronne à suivre'}
+  ]},
+  {group: 'Donjons', items: [
+    {id: 'le-donjon-sauvage', label: 'Le donjon sauvage'},
+    {id: 'le-village-des-gobelins', label: 'Le village des gobelins'}
+  ]}
+];
+
+const ZONES = [
+  ['Les Plaines', 1, 8],
+  ['La forêt', 8, 16],
+  ['Le marais', 23, 30],
+  ['La clairière miroir', 25, 30],
+  ['Le palais sombre', 27, 30]
+];
+
+/* ---- DONJONS ---- */
+const LEG = {
+  chemin: ['#ffff00', 'Chemin'], entree: ['#00e000', 'Entrée'], boss: ['#ff0000', 'Boss'],
+  impasse: ['#a000ff', 'Impasses'], statue: ['#ff9a00', 'Statues'], casino: ['#4f86f7', 'Crasse Ino']
+};
+const DUNGEONS = {
+  'le-donjon-sauvage': {
+    intro: ``,
+    map: 'images/donjon-sauvage-carte.png',
+    legend: ['chemin', 'entree', 'boss', 'impasse'],
+    sections: [
+      {type: 'group', title: 'Les monstres', list: [
+        {img: 'images/ds-1.jpg', name: 'Bandit sombre', hp: '800', desc: `Applique un effet de saignement.`},
+        {img: 'images/ds-2.jpg', name: 'Loup de sang', hp: '750', desc: `Peut invoquer deux loups de sang supplémentaires, applique un effet de saignement, augmente ses dégâts lorsqu'il subit une blessure.`},
+        {img: 'images/ds-3.jpg', name: 'Grizzerage', hp: '3 500', desc: `Augmente ses dégâts lorsqu'il subit des blessures, provoque l'effet "affaibli" qui dure deux tours : augmente les dégâts subis et les fait passer en perce-armure.`},
+        {img: 'images/ds-4.jpg', name: 'Loup gigantesque', hp: '6 500', boss: true, desc: `Peut invoquer des loups de sang, ses attaques affaiblissent le taux de réussite de l'esquive, parade et blocage.`}
+      ]},
+      {type: 'extra', title: `Les âmes de l'ombre`, img: 'images/ds-5.jpg', html: `<p>Petite information pour aider les joueurs. Dans la forêt, se trouve un monstre, la tisseuse de l'ombre. La vaincre vous permet d'obtenir une âme de l'ombre. Cette âme peut être utilisée sur vos armes ou armures avec l'aide d'un alchimiste. Elle vous permet d'obtenir un bonus de <b>+50% d'attaque</b> ou <b>+50% de défense</b>. Ces effets sont effectifs uniquement dans le donjon sauvage.</p>`}
+    ]
+  },
+  'le-village-des-gobelins': {
+    intro: ``,
+    map: 'images/village-gobelins-carte.png',
+    legend: ['chemin', 'entree', 'boss', 'statue', 'casino'],
+    sections: [
+      {type: 'group', title: 'Les monstres', list: [
+        {img: 'images/vg-01.jpg', name: 'Embuscade', hp: '100', desc: `Attaque à répétitions, un total fixe de sept. Impossibilité d'attaquer (survivre aux attaques). Perce-armure.`},
+        {img: 'images/vg-02.jpg', name: 'Gobelin', hp: '750', desc: `Peut invoquer un Hobgobelin, peut parer.`},
+        {img: 'images/vg-03.jpg', name: 'Hobgobelin', hp: '1 200', desc: `Peut parer.`},
+        {img: 'images/vg-04.jpg', name: `Hobgobelin d'élite`, hp: '1 500', desc: `Parade de haut dégât, applique un saignement.`},
+        {img: 'images/vg-05.jpg', name: 'Sorcier gobelin', hp: '2 500', desc: `Peut parer, diminue l'efficacité des soins.`}
+      ]},
+      {type: 'extra', title: 'Le crasse Ino', img: 'images/crass-ino.jpg', html: `<p>Permet de jouer à deux jeux contre des cols :</p><ul><li>Machine à Ch'tons</li><li>Crasse Jack</li></ul>`},
+      {type: 'extra', title: 'Les statues', html: `<p>Diverses statues se trouvent au sein de ce village. Elles semblent représenter des personnalités publiques dans le royaume gobelin. Malgré toutes les tentatives possibles, rien ne peut être effectué avec celle-ci. Ces statues sont considérées comme des « Immortal Object ».</p>`},
+      {type: 'extra', title: 'La salle du Boss !', html: `<p>Et oui, vous l'avez bien compris. Les joueurs entrés dans le donjon ont confirmé la localisation exacte du Boss ! Voici donc son emplacement. L'entrée du donjon se situe en bas à gauche du donjon, tandis que la salle du boss est en haut à gauche. Un face à face sans aucun jeu de mots.</p><p>Il semblerait que pour accéder à la salle du trône, une énigme doit être résolue. Les indices doivent se trouver quelque part dans le donjon…</p>`},
+      {type: 'group', title: 'Le Boss et ses slimes', list: [
+        {img: 'images/vg-07.jpg', name: 'Roi gobelin', hp: '30 000', boss: true, desc: `Peut invoquer des slimes de différentes couleurs. Attaques en perce-armure. L'indigestion du roi gobelin augmente les dégâts infligés par les joueurs.`},
+        {img: 'images/vg-08.jpg', name: 'Slime violet', hp: '1', desc: `Peut se transformer en tout type de monstres rencontrés au cours de votre aventure, boss inclus. Peut se diviser en plusieurs autres slimes violets. Armure élevée.`},
+        {img: 'images/vg-09.jpg', name: 'Slime bleu', hp: '1 000', desc: `Se fait dévorer pour rendre au Roi gobelin 300 points de vie par tour.`},
+        {img: 'images/vg-10.jpg', name: 'Slime vert', hp: '1 000', desc: `Augmente la défense du Roi gobelin de 30, jusqu'à la fin du combat.`},
+        {img: 'images/vg-11.jpg', name: 'Slime doré', hp: '1', desc: `Peut dérober des cols au joueur ciblé. Armure élevée.`},
+        {img: 'images/vg-12.jpg', name: 'Slime rouge', hp: '1 000', desc: `Augmente l'attaque du roi gobelin.`}
+      ]}
+    ]
+  }
+};
+function monsterHtml(m) {
+  return `<div class="mcard${m.boss ? ' boss' : ''}">
+    <a href="${m.img}" target="_blank" rel="noopener"><img src="${m.img}" alt="${m.name}" loading="lazy"></a>
+    <div class="mbody"><div class="mname">${m.name}</div>
+      <span class="hp">${m.hp} PV</span>${m.boss ? '<span class="bosstag">BOSS</span>' : ''}
+      <div class="mdesc"><b>Particularité :</b> ${m.desc}</div></div></div>`;
+}
+function sectionHtml(s) {
+  if (s.type === 'group') {
+    return `<div class="card"><h2>${s.title}</h2><div class="mgrid">${s.list.map(monsterHtml).join('')}</div></div>`;
+  }
+  const im = s.img ? `<a href="${s.img}" target="_blank" rel="noopener"><img src="${s.img}" alt="${s.title}" loading="lazy"></a>` : '';
+  return `<div class="card"><h2>${s.title}</h2><div class="extra${s.img ? '' : ' solo'}">${im}<div class="wikitext">${s.html}</div></div></div>`;
+}
+function dungeonPage(d) {
+  const intro = d.intro && d.intro.trim() ? `<div class="card wikitext">${d.intro}</div>` : '';
+  const leg = d.legend.map(k => `<span><i style="background:${LEG[k][0]}"></i>${LEG[k][1]}</span>`).join('');
+  return `${intro}
+    <div class="card"><h2>Carte du donjon</h2>
+      <a href="${d.map}" target="_blank" rel="noopener"><img class="map" src="${d.map}" alt="Carte du donjon"></a>
+      <div class="legend">${leg}</div></div>
+    ${d.sections.map(sectionHtml).join('')}`;
+}
+
+/* ---- CLASSES & COMPÉTENCES ---- */
+const CLASSES = [
+  {img: 'images/combattant.jpg', name: 'Les Combattants', text: `Les combattants possèdent énormément de points de vie, une attaque moyenne et peu de défense.`, skill: 'Coups jumeaux', sdesc: `Cette compétence inflige deux attaques distinctes. L'une réduit l'attaque de l'adversaire, tandis que l'autre inflige des dégâts.`},
+  {img: 'images/assassin.jpg', name: 'Les Assassins', text: `Les assassins possèdent une attaque très élevée, quelques points de vie et une défense très faible.`, skill: 'Frappes furtives', sdesc: `Cette compétence augmente votre attaque pendant un certain laps de temps et vous donne une deuxième attaque en réserve (Attaque à outrance). Quand cette dernière est déclenchée, elle réalise de puissants dégâts, mais retire le bonus d'attaque que vous aviez.`},
+  {img: 'images/chevalier.jpg', name: 'Les Chevaliers', text: `Les chevaliers possèdent une défense très élevée, des points de vie corrects et une attaque très faible.`, skill: 'Rempart protecteur', sdesc: `Cette compétence crée une barrière d'armure qui augmente le blocage et l'interception, dure un certain temps.`},
+  {img: 'images/paladin.jpg', name: 'Les Paladins', text: `Les paladins possèdent une défense élevée, une attaque correcte et très peu de points de vie.`, skill: 'Lumière guérisseuse', sdesc: `Cette compétence vous soigne ainsi que deux autres cibles. Elle supprime également toutes les altérations d'état néfastes.`},
+  {img: 'images/vindicateur.jpg', name: 'Les Vindicateurs', text: `Les vindicateurs possèdent beaucoup de points de vie, une bonne défense et peu d'attaque.`, skill: 'Rancune solennelle', sdesc: `Cette compétence vous permet d'infliger des dégâts à la hauteur des points de vie que vous avez perdus. Elle vous soigne en fonction des dégâts infligés.`},
+  {img: 'images/berserker.jpg', name: 'Les Berserkers', text: `Les berserkers possèdent une attaque élevée, beaucoup de points de vie et une faible défense.`, skill: 'Récupération furieuse', sdesc: `Cette compétence vous permet de vous soigner avec vos trois prochaines attaques.`}
+];
+const CLASSES_SECRETES = [
+  {img: 'images/maitre-des-betes.jpg', name: 'Le Maître des Bêtes', text: `???`}
+];
+
+const GS = 'https://sites.google.com/sitesv-images-rt/';
+const SKILLS = [
+  {name: 'Vorpal Strike', media: GS + 'AMxu72uNH-89Eh-7Qv7fvivht3hoBzKJKhevzCF8HZXzQ-kZiYRnm0wZWy05Zg5SvefZvCBKyEhzK3KH4ACUOten5bazRRGHZl5VDBqRuO5bQg9wO1s5u3HGMUMcCc1uggDxFM-Kyg8cBqPerow6bPh2cAUXa7FaO8ReZzwS1pEzUO8E4pqAWWKOoYyZK81H-Yd7MbsLL5N-sLxkK5q2dkmI2i2Rtqha7wzArfgJQmLu=w1280', remote: true, desc: `Une compétence composée de trois coups puissants qui infligent des dégâts sous forme de coups horizontaux.`},
+  {name: 'Rage Spike', media: GS + 'AMxu72uwuv4ZAP_gp-OnelDaE3UnxfHtRSAKy3moQ_8ckQylcR0pERkn9kjx1ldvVDaxYMGC3LmwqBL1AeLchMH2K9eLMNrhqs-RqQ-_km1ucB023L7GUfd2kyPkU6NXsY-PJniX6ejaVyQ-RRvG4O5Y0a8qFsaxjTutkJwoAfT58pm_qezHTyyL4mCtKTYxg7zt9tXcMF-J9SI_MvJwsOsZsY5fVf6ItfNQtLlFZVv7=w1280', remote: true, desc: `Une compétence d'un seul coup puissant où vous foncez sur votre cible, l'embrochant avec votre arme. Cette compétence empêche l'adversaire d'esquiver.`},
+  {name: 'Cyclone', media: GS + 'AMxu72t0WDHIbGpDbFDIwG1aZipjUY1ETDpTPmHHqGe1BfhGHq0RCqWVzqssX7EOInCSqYjL_zePWAGeBV925o2CklWYfnU9o2sh2tUXC1EMqc3SltsuXVzy664el0SK4defjp5c-5FX_d4BCTefhUfYzLSy_nHh9x0FNPKdExtqWy2I87Az5kmgetkQww9IbEEvOl7qGP5xXs0s01GMwzQ0fI8QuCtqaG1GMwdZ7rEz=w1280', remote: true, desc: `Une compétence qui ne cause pas de dégâts, mais qui a de fortes chances d'étourdir plusieurs cibles.`},
+  {name: 'Quadruple Pain', media: GS + 'AMxu72sakgCUWI8Abg0MIh_vw6HHLIMmk5-uYEjw0fjlwsfIV6TM0LPeh9jFSheCKhNfL2ZH1CQwnMJtQdGJuBn7U5EhIrGcFIrIp7rpwb0JYpl4SA3qQ9sp--r8SvmAgJ4Zp1XpuuAEqgmfwpfZI2cQKKU3E12SvtPXFrjmQz6ysnHSeJZulxqBOrAChzRKyzCz2P1w9T5kqcsvcTW0wSJKWvUf6czucALLv_UZSzxy=w1280', remote: true, desc: `Une compétence de quatre coups rapides qui infligent des dégâts sous forme de coups d'estoc.`},
+  {name: 'Lightning Fall', media: 'images/lightning-fall.jpg', desc: `Une compétence d'un seul coup qui peut paralyser la cible. Votre arme pointe vers le ciel avant de s'abattre verticalement sur votre adversaire.`},
+  {name: 'Deadly Sins', media: GS + 'AMxu72uULFJK3Abh-zkVd0npnmXQEGHykYxPNXvDLz-6A3-Ou4HioQz_8hrVp6h8tpQCumEOdvbtCQsFOQbv9xqi4xnoHPqSAjcgl0M7-OPFBVRpMIWRZRtojCPVxkeQkG_lwuXpYjI4g_L86duiowPwR1CNThX0fmV-DSqH8mF4f7ZWTOlja0vfu0sPdhDsD7a1eiAVZFj61KQ62CnSmLUOQ1MVj2PQiyKceD2hXoYiN7Y=w1280', remote: true, desc: `Une compétence d'un seul coup qui peut empoisonner la cible. Vous reculez légèrement avec votre arme devenant légèrement verte avant d'effectuer un coup d'estoc rapide.`},
+  {name: 'Blood Insanity', media: 'images/blood-insanity.svg', desc: `Une compétence où vous vous infligez des dégâts pour augmenter vos prochains dégâts pendant un certain temps. Vous vous transpercez avant de ressortir la lame, ce qui augmente votre force et vous entoure d'une aura étrange.`},
+  {name: 'Esquive Parfaite', media: 'images/esquive-parfaite.svg', desc: `Une compétence de défense qui vous permet de réaliser une esquive garantie tout en vous donnant un boost en esquive et en fuite pour les deux prochains tours.`},
+  {name: 'Blocage Parfait', media: GS + 'AMxu72u5HL9SNZ2YiPG8P5MMbYpyWnNNPQqmoL1-hvIWQhsaJ_NOGEW4KYQiG8AXg2v-ao80ZLLLUNFJTvCQtKvI7GtEq-tgpN-OdV3H_dbusMtQUYa4yMWY2ktr98xiiYXxTCzN0Iuq3PQTsOFEw6-oh8TEPMBEr86hAweJGPJsDu3f6FN9jidQwy_MCPNi3xe3aXsvDf5FtIiJsytsz-sTCiTwSGkG1U1stZAxT-q6vII=w1280', remote: true, desc: `Une compétence de défense qui vous permet de réaliser un blocage garanti tout en vous donnant un boost en blocage et en interception pour les deux prochains tours.`}
+];
+
+function classHtml(c, secret) {
+  const sk = c.skill ? `<div class="cskill"><small>Compétence de classe</small><b>[${c.skill}]</b> : ${c.sdesc}</div>` : '';
+  return `<div class="mcard${secret ? ' secret' : ''}">
+    <a href="${c.img}" target="_blank" rel="noopener"><img class="top" src="${c.img}" alt="${c.name}" loading="lazy"></a>
+    <div class="mbody"><div class="mname">${c.name}</div>
+      <div class="mdesc">${c.text}</div>${sk}</div></div>`;
+}
+function skillHtml(k) {
+  const fb = `this.replaceWith(Object.assign(document.createElement('div'),{className:'noimg',textContent:'Aperçu indisponible'}))`;
+  const media = k.remote
+    ? `<img src="${k.media}" alt="${k.name}" referrerpolicy="no-referrer" loading="lazy" onerror="${fb}">`
+    : `<a href="${k.media}" target="_blank" rel="noopener"><img src="${k.media}" alt="${k.name}" loading="lazy"></a>`;
+  return `<div class="mcard">${media}
+    <div class="mbody"><div class="mname">${k.name}</div><div class="mdesc">${k.desc}</div></div></div>`;
+}
+
+const PAGES = {
+  'accueil': {
+    title: 'Accueil', crumb: 'Bienvenue à Aincrad',
+    html: () => `
+      <div class="card hero">
+        <div class="portrait">
+          <img src="images/gray.jpg" alt="Gray, tueur de dragon" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="ph">Dépose la photo de Gray dans le dossier <b>images</b>, sous le nom <b>gray.jpg</b></div>
+        </div>
+        <div>
+          <p class="hello">Bien le bonjour, je suis <strong>Gray</strong>, tueur de dragon, un joueur du front dans la guilde d'<strong>Invidia</strong> : <strong>Les Lames du Crépuscule</strong>.</p>
+          <p class="hello" style="margin-top:14px">Je vous fais cadeau de mes connaissances et de ce qui est apparu depuis un petit moment.</p>        </div>
+      </div>
+      <div class="card">
+        <h2>Explorer le wiki</h2>
+        <div class="grid">
+          <a class="tile" href="#conseils"><b>Conseils</b><span>Débuter, métiers et paliers de niveaux</span></a>
+          <a class="tile" href="#un-forgeron-a-suivre"><b>La Forge</b><span>Forgeronne et équipement</span></a>
+          <a class="tile" href="#le-donjon-sauvage"><b>Donjons</b><span>Le donjon sauvage, le village des gobelins</span></a>        </div>
+      </div>`
+  },
+
+
+  'conseils': {
+    title: 'Conseils', crumb: 'Pour les joueurs débutants',
+    html: () => `
+      <div class="card">
+        <h2>Ne vous précipitez pas</h2>
+        <p class="hello">Pour les joueurs débutants : ne vous précipitez pas pour prendre des niveaux de combat. Pour nous rejoindre au front, il faut surtout <strong>monter vos niveaux de métiers</strong>, une partie importante du jeu.</p>
+        <p class="hello" style="margin-top:14px">Prenons le métier de <strong>mineur</strong>, qui sert à la forge d'armures : on mine des minerais qu'il faut fusionner avec une autre ressource primaire de la zone où vous avez récupéré le minerai. Il en va de même pour le <strong>bûcheronnage</strong>. Pour ces deux métiers, vous commencez dans la forêt : il faut attendre <strong>1 heure</strong> pour obtenir de l'XP et <strong>10 minutes</strong> pour les ressources.</p>
+        <div class="note">Pour l'XP, comptez plutôt <b>1h01</b> : c'est mieux pour ne pas se faire avoir. Et ne tentez pas de miner en attendant que l'heure passe.</div>
+        <div class="note">Un PNJ est apparu en ville, à <b>Tolbana</b> : il peut vous aider pour votre métier.</div>
+      </div>
+      <div class="card">
+        <h2>Mineur et bûcheron : zones par palier de niveau</h2>
+        <table class="lvl"><tr><td>Niv. 0</td><td>Forêt</td></tr><tr><td>Niv. 5</td><td>Marais</td></tr><tr><td>Niv. 10</td><td>Désert</td></tr><tr><td>Niv. 12</td><td>Ruines</td></tr><tr><td>Niv. 15</td><td>Canyon</td></tr><tr><td>Niv. 17</td><td>Canyon Ardent</td></tr><tr><td>Niv. 20</td><td>Village</td></tr><tr><td>Niv. 22</td><td>Forêt des arbres vivants</td></tr><tr><td>Niv. 26</td><td>Forêt des flammes</td></tr><tr><td>Niv. 28</td><td>Forêt hantée</td></tr><tr><td>Niv. 30</td><td>Palier 4</td></tr></table>
+        <p class="cap">Je suis spécialiste en mineur, et les métiers de bûcheron et de mineur se ressemblent dans les différentes zones : ces paliers valent pour les deux.</p>
+      </div>
+      <div class="card">
+        <h2>Cueilleur : zones par palier de niveau</h2>
+        <table class="lvl"><tr><td>Niv. 0</td><td>Plaines</td></tr><tr><td>Niv. 5</td><td>Forêt</td></tr><tr><td>Niv. 10</td><td>Marais</td></tr><tr><td>Niv. 12</td><td>Désert</td></tr><tr><td>Niv. 15</td><td>Ruines</td></tr><tr><td>Niv. 17</td><td>Canyon</td></tr><tr><td>Niv. 20</td><td>Canyon Ardent</td></tr><tr><td>Niv. 22</td><td>Village</td></tr><tr><td>Niv. 26</td><td>Forêt des arbres vivants</td></tr><tr class="maybe"><td>Niv. 27</td><td>Forêt des flammes</td></tr><tr class="maybe"><td>Niv. 28</td><td>Forêt hantée</td></tr></table>
+        <p class="cap">Pour les deux derniers paliers (en italique), je ne suis pas sûr : à vérifier.</p>
+      </div>
+      <div class="card">
+        <h2>Les métiers sont reliés</h2>
+        <p class="hello"><strong>Cueilleur</strong> pour l'alchimie et la cuisine ; <strong>mineur</strong> et <strong>bûcheron</strong> pour la forge.</p>
+        <p class="hello" style="margin-top:14px">Pour monter en niveau, formez de bons groupes où vous vous complétez, avec une bonne synergie.</p>
+      </div>`
+  },
+
+  'un-forgeron-a-suivre': {
+    title: 'Une forgeronne à suivre', crumb: 'La Forge',
+    html: () => `
+      <div class="card">
+        <p class="hello">La meilleure forgeronne actuelle, qui en fait un business, est <strong>Kotone</strong> : une joueuse prestigieuse et cheffe de la guilde <strong>Zodiac</strong>, une autre des guildes importantes du front.</p>
+        <p class="hello" style="margin-top:14px">Voici ses prix. N'hésitez pas à la contacter !</p>
+      </div>
+      <div class="card">
+        <a href="images/kotone.jpg" target="_blank" rel="noopener"><img class="price" src="images/kotone.jpg" alt="Tarifs de Kotone, forgeronne d'exception : armes et boucliers par zone et par palier"></a>
+        <p class="cap">Clique sur l'image pour l'agrandir</p>
+      </div>`
+  },
+
+  'les-classes': {
+    title: 'Les classes', crumb: 'Bien débuter sur le serveur',
+    html: () => `
+      <div class="card wikitext">
+        <p>Lorsque votre personnage arrive dans l'Aincrad, il a la possibilité de choisir une classe parmi six disponibles. Lors de votre aventure, il vous sera possible d'explorer, de découvrir, de combattre afin de percer tous les secrets de ce monde et évoluer vers des classes secrètes.</p>
+        <p><b style="color:var(--accent)">Bonne chance, futurs joueurs de l'Aincrad !</b></p>
+      </div>
+      <div class="card"><h2>Les classes de base</h2><div class="mgrid">${CLASSES.map(c => classHtml(c)).join('')}</div></div>
+      <div class="card"><h2>Les classes secrètes</h2><div class="mgrid">${CLASSES_SECRETES.map(c => classHtml(c, true)).join('')}</div></div>`
+  },
+
+  'les-competences': {
+    title: 'Les compétences', crumb: 'Bien débuter sur le serveur',
+    html: () => `
+      <div class="card wikitext">
+        <p>Une compétence représente une attaque spéciale, puissante, capable de placer votre adversaire dans divers états. Chaque compétence est unique en fonction du personnage et de la façon dont vous choisissez de la jouer ! Au début de votre aventure, vous ne possédez qu'une seule compétence.</p>
+      </div>
+      <div class="card"><h2>Liste des compétences</h2><div class="mgrid">${SKILLS.map(skillHtml).join('')}</div></div>`
+  },
+
+  'le-donjon-sauvage': {
+    title: 'Le donjon sauvage', crumb: 'Donjons',
+    html: () => dungeonPage(DUNGEONS['le-donjon-sauvage'])
+  },
+
+  'le-village-des-gobelins': {
+    title: 'Le village des gobelins', crumb: 'Donjons',
+    html: () => dungeonPage(DUNGEONS['le-village-des-gobelins'])
+  },
+
+  'les-voyages': {
+    title: 'Les voyages', crumb: 'Bien débuter sur le serveur',
+    html: () => `
+      <div class="card">
+        <p>Les voyages sont les temps d'attente entre les différentes zones du RP. Ils permettent de distinguer les <b style="color:var(--accent2)">safe zones</b> des <b style="color:var(--accent)">zones de combat</b>. Chaque zone de combat est adaptée à un certain niveau : faites attention à l'endroit où vous vous dirigez.</p>
+        <h2 style="margin-top:20px">Durée du trajet</h2>
+        <div class="stats">
+          <div class="stat"><div class="n">5 min</div><div class="l">Entre deux zones</div></div>
+          <div class="stat"><div class="n">15 min</div><div class="l">Entre deux paliers</div></div>
+        </div>
+        <div class="note">À mesure que les joueurs combattent chaque jour, l'XP qu'ils reçoivent est démultipliée.</div>
+      </div>
+      <div class="card">
+        <h2>Les zones de combat</h2>
+        ${ZONES.map(([n, a, b]) => `
+          <div class="zone">
+            <div class="top"><span class="nm">${n}</span><span class="lv">LVL ${a} – ${b}</span></div>
+            <div class="bar"><i style="left:${(a - 1) / 30 * 100}%;width:${(b - a + 1) / 30 * 100}%"></i></div>
+          </div>`).join('')}
+        <div class="scale"><span>LVL 1</span><span>LVL 15</span><span>LVL 30</span></div>
+      </div>`
+  }
+};
+
+/* ---- construction du menu ---- */
+const menu = document.getElementById('menu');
+menu.innerHTML = MENU.map(m => m.group
+  ? `<details data-g="${m.group}"><summary>${m.group}</summary>${m.items.map(i => `<a href="#${i.id}" data-id="${i.id}">${i.label}</a>`).join('')}</details>`
+  : `<a href="#${m.id}" data-id="${m.id}">${m.label}</a>`).join('');
+
+function findItem(id) {
+  for (const m of MENU) {
+    if (m.id === id) return {label: m.label, group: null};
+    if (m.items) { const f = m.items.find(i => i.id === id); if (f) return {label: f.label, group: m.group}; }
+  }
+  return null;
+}
+
+let currentId = 'accueil';
+function route(forcedId) {
+  const id = (typeof forcedId === 'string' && forcedId) ? forcedId : (location.hash || '#accueil').slice(1);
+  currentId = id;
+  const info = findItem(id) || {label: 'Accueil', group: null};
+  const page = PAGES[id] || (findItem(id) ? null : PAGES['accueil']);
+  const c = document.getElementById('content');
+  const realId = findItem(id) ? id : 'accueil';
+
+  document.querySelectorAll('nav a').forEach(a => a.classList.toggle('active', a.dataset.id === realId));
+  document.querySelectorAll('nav details').forEach(d => { if (d.querySelector('a.active')) d.open = true; });
+
+  if (page) {
+    c.innerHTML = `<div class="page"><div class="crumb">${page.crumb || ''}</div><h1>${page.title}</h1>${page.html()}</div>`;
+  } else {
+    c.innerHTML = `<div class="page"><div class="crumb">${info.group || ''}</div><h1>${info.label}</h1>
+      <div class="card soon"><div class="orb">…</div><p>Cette page arrive bientôt.<br>Gray y grave encore ses connaissances.</p></div>
+      </div>`;
+  }
+  c.scrollTop = 0;
+  document.getElementById('menu').classList.remove('open');
+}
+addEventListener('hashchange', () => route());
+/* Navigation par clic : fonctionne même quand le fichier est ouvert dans un aperçu ou un cadre isolé */
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  e.preventDefault();
+  const id = a.getAttribute('href').slice(1);
+  try { history.replaceState(null, '', '#' + id); } catch (err) {}
+  route(id);
+});
+document.getElementById('burger').addEventListener('click', () => document.getElementById('menu').classList.toggle('open'));
+</script>
+</body>
+</html>

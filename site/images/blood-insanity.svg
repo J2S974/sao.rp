@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+<defs>
+  <radialGradient id="bg" cx="50%" cy="55%" r="75%">
+    <stop offset="0" stop-color="#4a0a12"/><stop offset=".6" stop-color="#1b0509"/><stop offset="1" stop-color="#070205"/>
+  </radialGradient>
+  <radialGradient id="aura" cx="50%" cy="50%" r="50%">
+    <stop offset="0" stop-color="#ff3b3b" stop-opacity=".95"/><stop offset=".5" stop-color="#c4122a" stop-opacity=".5"/><stop offset="1" stop-color="#7a0014" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="blade" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f4f7fc"/><stop offset=".5" stop-color="#b8c2d2"/><stop offset="1" stop-color="#6b7686"/>
+  </linearGradient>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7"/></filter>
+</defs>
+<style>
+  .pulse{transform-origin:320px 180px;animation:pulse 1.6s ease-in-out infinite}
+  .spin{transform-origin:320px 180px;animation:spin 7s linear infinite}
+  .spin2{transform-origin:320px 180px;animation:spin 11s linear infinite reverse}
+  .shake{transform-origin:320px 180px;animation:shake .5s ease-in-out infinite}
+  .drop{animation:rise 2.6s linear infinite}
+  @keyframes pulse{0%,100%{transform:scale(.82);opacity:.7}50%{transform:scale(1.18);opacity:1}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes shake{0%,100%{transform:translate(0,0)}25%{transform:translate(1.5px,-1px)}75%{transform:translate(-1.5px,1px)}}
+  @keyframes rise{0%{transform:translateY(0);opacity:0}15%{opacity:.95}100%{transform:translateY(-210px);opacity:0}}
+</style>
+<rect width="640" height="360" fill="url(#bg)"/>
+<g class="pulse"><circle cx="320" cy="180" r="175" fill="url(#aura)"/></g>
+<g class="spin" fill="none" stroke="#ff4a4a" stroke-opacity=".65" stroke-width="2">
+  <circle cx="320" cy="180" r="125" stroke-dasharray="14 20"/>
+</g>
+<g class="spin2" fill="none" stroke="#ff8a7a" stroke-opacity=".55" stroke-width="1.5">
+  <circle cx="320" cy="180" r="98" stroke-dasharray="4 10"/>
+</g>
+<g class="spin" fill="#ff3b3b" fill-opacity=".35">
+  <polygon points="320,10 326,95 314,95"/><polygon points="320,350 326,265 314,265"/>
+  <polygon points="150,180 235,174 235,186"/><polygon points="490,180 405,174 405,186"/>
+  <polygon points="200,60 255,125 246,134"/><polygon points="440,300 385,235 394,226"/>
+  <polygon points="440,60 385,125 394,134"/><polygon points="200,300 255,235 246,226"/>
+</g>
+<g class="shake">
+  <circle cx="320" cy="180" r="70" fill="#ff2a2a" fill-opacity=".35" filter="url(#glow)"/>
+  <g transform="translate(320 180) rotate(-38)">
+    <polygon points="-150,-10 128,-10 168,0 128,10 -150,10" fill="url(#blade)" stroke="#e8edf6" stroke-width=".8"/>
+    <line x1="-140" y1="0" x2="120" y2="0" stroke="#5b6574" stroke-width="2"/>
+    <rect x="-162" y="-32" width="12" height="64" rx="3" fill="#2a1418" stroke="#ff4a4a" stroke-width="1.2"/>
+    <rect x="-216" y="-7" width="54" height="14" rx="4" fill="#1a0d10"/>
+    <circle cx="-224" cy="0" r="10" fill="#2a1418" stroke="#ff4a4a" stroke-width="1.2"/>
+    <path d="M20,-10 q-4,22 2,30 q6,-8 3,-30 z" fill="#d0152b" opacity=".9"/>
+    <path d="M70,10 q-3,18 2,24 q5,-6 2,-24 z" fill="#d0152b" opacity=".9"/>
+  </g>
+</g>
+<g fill="#ff3b3b">
+  <circle class="drop" cx="250" cy="300" r="4" style="animation-delay:0s"/>
+  <circle class="drop" cx="290" cy="320" r="3" style="animation-delay:.6s"/>
+  <circle class="drop" cx="330" cy="310" r="5" style="animation-delay:1.2s"/>
+  <circle class="drop" cx="372" cy="325" r="3.5" style="animation-delay:1.8s"/>
+  <circle class="drop" cx="410" cy="300" r="4" style="animation-delay:.9s"/>
+  <circle class="drop" cx="215" cy="330" r="3" style="animation-delay:1.5s"/>
+  <circle class="drop" cx="445" cy="330" r="3" style="animation-delay:.3s"/>
+</g>
+</svg>
